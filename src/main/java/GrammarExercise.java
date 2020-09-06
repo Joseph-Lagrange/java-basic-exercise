@@ -13,6 +13,24 @@ public class GrammarExercise {
 
     public static List<String> findCommonWordsWithSpace(String firstWordList, String secondWordList) {
         //在这编写实现代码
-        return null;
+        List<String> firstList = Arrays.asList(firstWordList.toUpperCase().split(","));
+        List<String> secondList = Arrays.asList(secondWordList.toUpperCase().split(","));
+
+        Stream.concat(firstList.stream(), secondList.stream())
+                .collect(Collectors.toList())
+                .forEach(item -> {
+                    if (!item.matches("[a-zA-Z]+"))
+                        throw new RuntimeException("input not valid");
+                });
+
+        List<String> list = firstList.stream()
+                .distinct()
+                .filter(secondList::contains)
+                .collect(Collectors.toList());
+        list.sort(String.CASE_INSENSITIVE_ORDER);
+
+        List<String> result = new ArrayList<>(list.size());
+        list.forEach(item -> result.add(item.replace("", " ").trim()));
+        return result;
     }
 }
